@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsistManager - Mis Clases</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <header id="main-header">
+        <nav class="navbar">
+            <a href="./dashboard.html" class="logo">
+                <i class="fa-regular fa-calendar-check"></i> AsistManager
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <a href="./dashboard.html" class="btn btn-gestion" style="color: var(--texto-oscuro); text-decoration: none; font-weight: 700; margin-right: 1.5rem;">
+                        <i class="fa-solid fa-table-columns"></i> Horario
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="btnCerrarSesion" class="btn btn-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Salir
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container schedule-container">
+        <section class="schedule-header">
+            <div>
+                <h1>Gestión de Clases</h1>
+                <p>Administra la configuración y los alumnos de tus materias.</p>
+            </div>
+            <a href="./gestionar_clase.html" class="btn btn-add-list" onclick="sessionStorage.removeItem('claseAEditar');">
+                <i class="fa-solid fa-plus"></i> Nueva Clase
+            </a>
+        </section>
+
+        <section class="admin-grid" id="gridMisClases">
+            </section>
+    </main>
+
+    <script src="./js/mis_clases.js"></script>
+</body>
+</html>

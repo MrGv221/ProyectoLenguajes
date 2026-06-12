@@ -1,0 +1,20 @@
+[
+    {
+        "usuario": "alumno@correo.com",
+        "contrasena": "alumno123",
+        "nombre": "Juan Pérez",
+        "rol": "alumno"
+    },
+    {
+        "usuario": "empleado@correo.com",
+        "contrasena": "empleado123",
+        "nombre": "Ana Martínez",
+        "rol": "empleado"
+    },
+    {
+        "usuario": "admin",
+        "contrasena": "admin2026",
+        "nombre": "Supervisor de Alertas",
+        "rol": "administrador"
+    }
+]

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsistManager - Reporte de Asistencia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="manage-page" style="--color-materia: var(--color-primario);"> 
+    <header id="main-header">
+        <nav class="navbar">
+            <a href="./mis_clases.html" class="logo"><i class="fa-solid fa-arrow-left"></i> Volver a Clases</a>
+            <span id="txtNombreClase" style="font-weight: 800; color: var(--texto-oscuro);">Reporte de Evaluación</span>
+            <button id="btnDescargarExcel" class="btn" style="background-color: #81B29A; color: white;">
+                <i class="fa-solid fa-file-excel"></i> Exportar
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="manage-card" style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+            
+            <div class="attendance-header" style="margin-bottom: 2rem;">
+                <div class="class-info">
+                    <div class="icon-box selected" id="iconoClase" style="cursor: default;">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <h2 id="lblNombreMateria" style="margin-bottom: 0;">Materia</h2>
+                        <p id="lblDetallesMateria" style="color: var(--texto-mutado); font-size: 0.9rem; margin-top: 0.2rem;">Resumen global del semestre</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="styled-table" id="tablaReporte">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Alumno</th>
+                            <th style="text-align: center;"><i class="fa-solid fa-check" style="color: #81B29A;"></i> Asist.</th>
+                            <th style="text-align: center;"><i class="fa-solid fa-clock" style="color: #F2CC8F;"></i> Retardos</th>
+                            <th style="text-align: center;"><i class="fa-solid fa-xmark" style="color: #E07A5F;"></i> Faltas</th>
+                            <th style="text-align: center;"><i class="fa-solid fa-file-medical" style="color: #9DB4C0;"></i> Justif.</th>
+                            <th style="text-align: right;">% Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="student-row">
+                            <td>
+                                <div style="font-weight: 700; color: var(--texto-oscuro);">Juan Pérez Ejemplo</div>
+                                <div style="font-size: 0.8rem; color: var(--texto-mutado); font-family: monospace;">20260001</div>
+                            </td>
+                            <td style="text-align: center;"><span class="badge badge-green">12</span></td>
+                            <td style="text-align: center;"><span class="badge badge-yellow">2</span></td>
+                            <td style="text-align: center;"><span class="badge badge-red">0</span></td>
+                            <td style="text-align: center;"><span class="badge badge-gray">1</span></td>
+                            <td style="text-align: right;"><span class="percentage safe">100%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div id="modalDetalles" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="max-width: 650px; width: 95%;">
+                
+                <div class="modal-header">
+                    <div>
+                        <h3 id="modalNombreAlumno" style="margin: 0; color: var(--texto-oscuro);">Nombre del Alumno</h3>
+                        <p id="modalMatriculaAlumno" style="margin: 0; font-size: 0.85rem; color: var(--texto-mutado); font-family: monospace;">Matrícula</p>
+                    </div>
+                    <button id="btnCerrarModal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--texto-mutado);"><i class="fa-solid fa-times"></i></button>
+                </div>
+
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-filter="todo">Todo</button>
+                    <button class="tab-btn" data-filter="asistencia">Asistencias</button>
+                    <button class="tab-btn" data-filter="retardo">Retardos</button>
+                    <button class="tab-btn" data-filter="falta">Faltas</button>
+                    <button class="tab-btn" data-filter="justificado">Justificadas</button>
+                </div>
+
+                <div class="modal-body" style="background-color: #f8f9fa; padding: 1rem;">
+                    <ul id="listaFechasModal" class="history-list">
+                        
+                        <li class="history-row row-falta" data-estado="falta">
+                            <div class="history-date">
+                                <i class="fa-regular fa-calendar"></i> Lunes, 8 de Junio
+                            </div>
+                            <div class="status-controls mini-controls">
+                                <input type="radio" name="mod_1" id="m_pres_1" value="asistencia">
+                                <label for="m_pres_1" title="Asistencia"><i class="fa-solid fa-check"></i></label>
+
+                                <input type="radio" name="mod_1" id="m_ret_1" value="retardo">
+                                <label for="m_ret_1" title="Retardo"><i class="fa-solid fa-clock"></i></label>
+
+                                <input type="radio" name="mod_1" id="m_falt_1" value="falta" checked>
+                                <label for="m_falt_1" title="Falta"><i class="fa-solid fa-xmark"></i></label>
+
+                                <input type="radio" name="mod_1" id="m_just_1" value="justificado">
+                                <label for="m_just_1" title="Justificar"><i class="fa-solid fa-file-medical"></i></label>
+                            </div>
+                        </li>
+
+                        <li class="history-row row-asistencia" data-estado="asistencia">
+                            <div class="history-date">
+                                <i class="fa-regular fa-calendar"></i> Martes, 9 de Junio
+                            </div>
+                            <div class="status-controls mini-controls">
+                                <input type="radio" name="mod_2" id="m_pres_2" value="asistencia" checked>
+                                <label for="m_pres_2"><i class="fa-solid fa-check"></i></label>
+
+                                <input type="radio" name="mod_2" id="m_ret_2" value="retardo">
+                                <label for="m_ret_2"><i class="fa-solid fa-clock"></i></label>
+
+                                <input type="radio" name="mod_2" id="m_falt_2" value="falta">
+                                <label for="m_falt_2"><i class="fa-solid fa-xmark"></i></label>
+
+                                <input type="radio" name="mod_2" id="m_just_2" value="justificado">
+                                <label for="m_just_2"><i class="fa-solid fa-file-medical"></i></label>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="./js/reporte.js"></script>
+    </body>
+</html>

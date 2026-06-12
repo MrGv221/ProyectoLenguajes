@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsistManager - Pasar Lista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="manage-page" style="--color-materia: var(--color-primario);"> 
+    <header id="main-header">
+        <nav class="navbar">
+            <a href="./dashboard.html" class="logo"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+            <span id="txtNombreClase" style="font-weight: 800; color: var(--texto-oscuro);">Cargando...</span>
+            <div style="display: flex; gap: 0.6rem;">
+                <button id="btnDiaInhabil" class="btn" style="background-color: #F2CC8F; color: #3D405B;">
+                    <i class="fa-solid fa-calendar-minus"></i> Día Inhábil
+                </button>
+                <button id="btnGuardarAsistencia" class="btn btn-save-all"><i class="fa-solid fa-check-double"></i> Finalizar Pase</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="manage-card" style="max-width: 1000px; margin: 0 auto;">
+            
+            <div class="attendance-header">
+                <div class="class-info">
+                    <div class="icon-box selected" id="iconoClase" style="cursor: default;">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <h2 id="lblNombreMateria" style="margin-bottom: 0;">Materia</h2>
+                        <p id="lblDetallesMateria" style="color: var(--texto-mutado); font-size: 0.9rem; margin-top: 0.2rem;">Cargando aula...</p>
+                    </div>
+                </div>
+                <div class="date-badge">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    <span id="lblFechaActual">Calculando fecha...</span>
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px dashed var(--input-border-light); margin: 1.5rem 0;">
+
+            <div id="bannerInhabil" style="display: none; background-color: #F2CC8F; color: #3D405B; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 700; text-align: center; border: 1px solid rgba(0,0,0,0.05);">
+                <i class="fa-solid fa-circle-exclamation animate-pulse"></i> Este día está guardado como DÍA INHÁBIL. No afectará el porcentaje de los alumnos.
+            </div>
+            
+            <div class="attendance-list" id="listaAlumnosAsistencia">
+                
+                <div class="attendance-row">
+                    <div class="student-info">
+                        <span class="student-name">Juan Pérez Ejemplo</span>
+                        <span class="student-mat">20260001</span>
+                    </div>
+                    <div class="status-controls">
+                        <input type="radio" name="status_1" id="pres_1" value="presente" checked>
+                        <label for="pres_1"><i class="fa-solid fa-check"></i></label>
+
+                        <input type="radio" name="status_1" id="ret_1" value="retardo">
+                        <label for="ret_1"><i class="fa-solid fa-clock"></i></label>
+
+                        <input type="radio" name="status_1" id="falt_1" value="falta">
+                        <label for="falt_1"><i class="fa-solid fa-xmark"></i></label>
+                    </div>
+                </div>
+                </div>
+        </section>
+    </main>
+
+    <script src="./js/pasar_lista.js"></script>
+    </body>
+</html>
