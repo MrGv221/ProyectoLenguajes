@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // 1. Obtener ID y Fecha de la URL
+
+    // === 1. OBTENER ID Y FECHA DE LA URL ===
     const urlParams = new URLSearchParams(window.location.search);
     const idClase = urlParams.get('id');
     const fechaParam = urlParams.get('fecha'); 
 
     if (!idClase) {
-        alert("⚠️ No se especificó ninguna clase.");
+        alert("No se especificó ninguna clase.");
         window.location.href = "./dashboard.html";
         return;
     }
 
-    // 2. Lógica de Fechas
+    // === 2. LÓGICA DE FECHAS ===
     let fechaDate = new Date();
     let fechaBD = ''; 
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fechaTexto = fechaDate.toLocaleDateString('es-MX', opcionesFecha);
     document.getElementById('lblFechaActual').innerText = fechaTexto.charAt(0).toUpperCase() + fechaTexto.slice(1);
 
-    // 3. Traer los datos de la Clase (Color, Ícono, Nombre)
+    // === 3. DATOS DE LA CLASE ===
     try {
         const resMateria = await fetch(`./php/get_lista_detalle.php?id=${idClase}`);
         const dataMateria = await resMateria.json();
@@ -41,11 +41,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) { console.error("Error al cargar materia:", e); }
 
-    // 4. Traer a los alumnos de la base de datos (Pasando la FECHA como parámetro)
+    // === 4. CARGAR ALUMNOS ===
     const contenedorLista = document.getElementById('listaAlumnosAsistencia');
     
     try {
-        // NUEVO: Mandamos &fecha= para que el LEFT JOIN haga su magia
         const resAlumnos = await fetch(`./php/api_alumnos.php?lista_id=${idClase}&fecha=${fechaBD}&_t=${Date.now()}`);
         const dataAlumnos = await resAlumnos.json();
 
@@ -55,27 +54,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Validar si el día ya está guardado como inhábil
             const esInhabil = dataAlumnos.alumnos[0].estado_asistencia === 'inhabil';
             document.getElementById('bannerInhabil').style.display = esInhabil ? 'block' : 'none';
 
-            // Transformar el botón dependiendo del estado del día
             const btnInhabil = document.getElementById('btnDiaInhabil');
             if (esInhabil) {
                 btnInhabil.innerHTML = `<i class="fa-solid fa-rotate-left"></i> Restaurar Día`;
-                btnInhabil.style.backgroundColor = "#E07A5F"; // Rojo suave Cozzy
+                btnInhabil.style.backgroundColor = "#E07A5F"; 
                 btnInhabil.style.color = "white";
                 btnInhabil.setAttribute('data-action', 'restaurar');
             } else {
                 btnInhabil.innerHTML = `<i class="fa-solid fa-calendar-minus"></i> Día Inhábil`;
-                btnInhabil.style.backgroundColor = "#F2CC8F"; // Amarillo suave Cozzy
+                btnInhabil.style.backgroundColor = "#F2CC8F"; 
                 btnInhabil.style.color = "#3D405B";
                 btnInhabil.setAttribute('data-action', 'inhabil');
             }
 
-            // Dibujar la lista respetando el estado guardado en la BD
             contenedorLista.innerHTML = dataAlumnos.alumnos.map((a, index) => {
-                // Si no tiene estado guardado en la BD, por defecto lo dejamos en 'asistencia'
                 const estadoDefinitivo = a.estado_asistencia || 'asistencia';
 
                 return `
@@ -100,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) { console.error("Error al cargar alumnos:", e); }
 
-    // 5. Botón Finalizar Pase (Guardar / Actualizar standard)
+    // === 5. FINALIZAR PASE (GUARDAR) ===
     document.getElementById('btnGuardarAsistencia').addEventListener('click', async () => {
         const filas = document.querySelectorAll('.attendance-row');
         const listaParaGuardar = [];
@@ -108,7 +103,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         filas.forEach(fila => {
             const idAlumno = fila.getAttribute('data-id');
             const radioCheck = fila.querySelector('input[type="radio"]:checked');
-            // Si el día era inhábil y el profe decide cambiar a un estado manual, lo permitimos
             const estadoSeleccionado = radioCheck ? radioCheck.value : 'asistencia';
             
             listaParaGuardar.push({ alumno_id: idAlumno, estado: estadoSeleccionado });
@@ -117,16 +111,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         await enviarAsistenciaAlServidor(listaParaGuardar, true);
     });
 
-    // 6. NUEVO: Lógica del Botón "Día Inhábil / Restaurar"
+    // === 6. DÍA INHÁBIL / RESTAURAR ===
     document.getElementById('btnDiaInhabil').addEventListener('click', async (e) => {
-        // Leemos qué acción tiene el botón en este momento
         const accion = e.currentTarget.getAttribute('data-action');
         const esRestaurar = (accion === 'restaurar');
         
-        // Mensaje dinámico
         const mensaje = esRestaurar 
             ? "¿Deseas cancelar el Día Inhábil y restaurar la asistencia normal de todos los alumnos?"
-            : "⚠️ ¿Estás seguro de marcar este día como Inhábil?\nTodos los alumnos se guardarán exentos de falta hoy.";
+            : "¿Estás seguro de marcar este día como Inhábil?\nTodos los alumnos se guardarán exentos de falta hoy.";
             
         const confirmar = confirm(mensaje);
         if(!confirmar) return;
@@ -134,7 +126,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const filas = document.querySelectorAll('.attendance-row');
         const listaModificada = [];
         
-        // Si estamos restaurando, todos vuelven a 'asistencia', si no, a 'inhabil'
         const nuevoEstado = esRestaurar ? 'asistencia' : 'inhabil';
 
         filas.forEach(fila => {
@@ -148,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await enviarAsistenciaAlServidor(listaModificada, false);
     });
 
-    // Función global inteligente (Recibe un segundo parámetro: irADashboard)
+    // === 7. FUNCIÓN GLOBAL DE GUARDADO ===
     async function enviarAsistenciaAlServidor(paqueteAlumnos, irADashboard = false) {
         const btn = document.getElementById('btnGuardarAsistencia');
         const originalHTML = btn.innerHTML;
@@ -169,9 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const resultado = await respuesta.json();
 
             if(resultado.ok) {
-                alert("✅ " + resultado.mensaje);
+                alert("" + resultado.mensaje);
                 
-                // LÓGICA DE REDIRECCIÓN
                 if (irADashboard) {
                     window.location.href = "./dashboard.html";
                 } else {
@@ -179,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
             } else {
-                alert("❌ Error: " + resultado.mensaje);
+                alert("Error: " + resultado.mensaje);
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
             }

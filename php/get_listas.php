@@ -1,10 +1,10 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
-// 1. Capturar el ID del usuario que solicita las listas (por defecto usamos el 3 del Admin para pruebas)
+// === 1. RECIBIR PARÁMETROS ===
 $usuario_id = isset($_GET['usuario_id']) ? intval($_GET['usuario_id']) : 3;
 
-// 2. Parámetros de conexión a la Base de Datos de Docker
+// === 2. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -19,7 +19,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // 3. Consulta SQL usando DATE_FORMAT para transformar la hora militar (07:00:00) a formato legible (07:00 AM)
+    // === 3. OBTENER LISTAS ACTIVAS ===
     $stmt = $pdo->prepare("
         SELECT 
             id, 
@@ -37,7 +37,6 @@ try {
     $stmt->execute(['usuario_id' => $usuario_id]);
     $listas = $stmt->fetchAll();
 
-    // Devolvemos las listas reales de la BD
     echo json_encode([
         "ok" => true,
         "listas" => $listas

@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
-// 1. Recibir los datos por POST
+// === 1. RECIBIR DATOS ===
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
 
@@ -13,7 +13,7 @@ if (!$data || !isset($data['id']) || !isset($data['usuario_id'])) {
 $id_clase = intval($data['id']);
 $usuario_id = intval($data['usuario_id']);
 
-// 2. Conexión a la Base de Datos (Docker)
+// === 2. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -28,12 +28,11 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // 3. Ejecutar el Soft Delete (Update)
+    // === 3. EJECUTAR ARCHIVADO ===
     $sql = "UPDATE listas SET estado = 'archivada' WHERE id = :id AND usuario_id = :usuario_id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id_clase, 'usuario_id' => $usuario_id]);
 
-    // Comprobamos si realmente se modificó alguna fila
     if ($stmt->rowCount() > 0) {
         echo json_encode(["ok" => true, "mensaje" => "Materia archivada correctamente."]);
     } else {

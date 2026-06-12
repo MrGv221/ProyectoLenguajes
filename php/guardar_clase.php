@@ -1,17 +1,16 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
-// 1. Leer el paquete de datos JSON que envía JavaScript
+// === 1. RECIBIR DATOS Y VALIDAR ===
 $input = file_get_contents("php://input");
 $data = json_decode($input, true);
 
-// 2. Validación básica de seguridad
 if (!$data || !isset($data['usuario_id']) || empty($data['nombre'])) {
     echo json_encode(["ok" => false, "mensaje" => "Datos obligatorios incompletos."]);
     exit;
 }
 
-// 3. Asignar variables
+// === 2. ASIGNAR VARIABLES ===
 $id = isset($data['id']) && $data['id'] !== null ? intval($data['id']) : null;
 $usuario_id = intval($data['usuario_id']);
 $nombre = $data['nombre'];
@@ -23,7 +22,7 @@ $dias = $data['dias'];
 $color = $data['color'];
 $icono = $data['icono'];
 
-// 4. Conexión a la Base de Datos (Docker)
+// === 3. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -38,9 +37,8 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // 5. Lógica de Tráfico: ¿Es un UPDATE o un INSERT?
+    // === 4. LÓGICA DE GUARDADO (UPDATE / INSERT) ===
     if ($id) {
-        // ACTUALIZAR MATERIA EXISTENTE
         $sql = "UPDATE listas 
                 SET nombre = :nombre, clave_grupo = :clave, aula = :aula, 
                     hora_inicio = :inicio, hora_fin = :fin, dias_clase = :dias, 
@@ -57,7 +55,6 @@ try {
         echo json_encode(["ok" => true, "mensaje" => "Materia actualizada correctamente."]);
 
     } else {
-        // CREAR NUEVA MATERIA
         $sql = "INSERT INTO listas (usuario_id, nombre, clave_grupo, aula, hora_inicio, hora_fin, dias_clase, color, icono, estado) 
                 VALUES (:usuario_id, :nombre, :clave, :aula, :inicio, :fin, :dias, :color, :icono, 'activa')";
         
@@ -67,7 +64,6 @@ try {
             'inicio' => $inicio, 'fin' => $fin, 'dias' => $dias, 'color' => $color, 'icono' => $icono
         ]);
         
-        // Obtener el ID que MySQL acaba de generar
         $nuevo_id = $pdo->lastInsertId();
         echo json_encode(["ok" => true, "mensaje" => "Materia creada correctamente.", "nuevo_id" => $nuevo_id]);
     }

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // 1. Validar Sesión
+
+    // === 1. VALIDAR SESIÓN ===
     const sesionGuardada = sessionStorage.getItem('usuarioSesion');
     if (!sesionGuardada) {
         window.location.href = "./login.html";
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     const usuario = JSON.parse(sesionGuardada);
 
-    // 2. Obtener las clases de la BD
+    // === 2. OBTENER CLASES DE LA BASE DE DATOS ===
     try {
         const respuesta = await fetch(`./php/get_listas.php?usuario_id=${usuario.id}`);
         if (!respuesta.ok) throw new Error("Error en la respuesta del servidor.");
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <span><i class="fa-solid fa-location-dot"></i> ${clase.aula}</span>
                         </div>
                         <div class="card-actions admin-actions">
-                            <button class="btn-report-admin" data-id="${clase.id}" style="background-color: #9DB4C0; color: white;">
+                            <button class="btn-report-admin" data-id="${clase.id}">
                                 <i class="fa-solid fa-chart-simple"></i> Reporte
                             </button>
                             <button class="btn-edit-admin" data-id="${clase.id}">
@@ -53,14 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert("Ocurrió un error al cargar tus clases.");
     }
 
-    // 3. Lógica de botones administrativos
+    // === 3. LÓGICA DE BOTONES ADMINISTRATIVOS ===
     document.getElementById('gridMisClases').addEventListener('click', (e) => {
-        // Capturamos el nuevo botón de reporte junto con los otros
         const btnReporte = e.target.closest('.btn-report-admin');
         const btnConfigurar = e.target.closest('.btn-edit-admin');
         const btnArchivar = e.target.closest('.btn-archive');
 
-        // NUEVO: Redirección directa mandando el ID por la URL
         if (btnReporte) {
             const idClase = btnReporte.getAttribute('data-id');
             window.location.href = `./reporte.html?id=${idClase}`;
@@ -93,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         if (resultado.ok) {
                             window.location.reload();
                         } else {
-                            alert("❌ Error: " + resultado.mensaje);
+                            alert("Error: " + resultado.mensaje);
                         }
                     } catch (error) {
                         console.error("Error al archivar:", error);
@@ -106,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 4. Cerrar Sesión
+    // === 4. CERRAR SESIÓN ===
     document.getElementById('btnCerrarSesion').addEventListener('click', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('usuarioSesion');

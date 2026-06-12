@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// === 1. RECIBIR PARÁMETROS ===
 $lista_id = isset($_GET['lista_id']) ? intval($_GET['lista_id']) : 0;
 $alumno_id = isset($_GET['alumno_id']) ? intval($_GET['alumno_id']) : 0;
 
@@ -9,6 +10,7 @@ if ($lista_id === 0 || $alumno_id === 0) {
     exit;
 }
 
+// === 2. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -22,7 +24,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // MAGIA SQL: Obtenemos todas las fechas de la clase y le cruzamos los datos del alumno
+    // === 3. OBTENER HISTORIAL ===
     $sql = "SELECT 
                 fechas.fecha, 
                 r.estado_asistencia 

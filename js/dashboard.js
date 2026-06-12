@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // 1. Validar Sesión (Seguridad básica)
+
+    // === 1. VALIDAR SESIÓN Y BIENVENIDA ===
     const sesionGuardada = sessionStorage.getItem('usuarioSesion');
     if (!sesionGuardada) {
         window.location.href = "./login.html";
@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const usuario = JSON.parse(sesionGuardada);
     document.getElementById('txtBienvenida').innerText = `¡Hola, ${usuario.nombre}!`;
 
-    // 2. Psicología UX: Identificar y resaltar el día actual
+    // === 2. CONFIGURACIÓN DE FECHA ACTIVA ===
     const fechaActual = new Date();
-    const diaSemana = fechaActual.getDay(); // 0 = Domingo, 1 = Lunes... 6 = Sábado
+    const diaSemana = fechaActual.getDay();
     
     const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('txtFecha').innerText = `Hoy es ${fechaActual.toLocaleDateString('es-ES', opcionesFecha)}.`;
@@ -21,12 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(columnaHoy) columnaHoy.classList.add('active-day');
     }
 
-    // FUNCIÓN HELPER NUEVA: Calcula la fecha YYYY-MM-DD exacta del lunes, martes, etc., de la semana actual
+    // === 3. FUNCIONES AUXILIARES ===
     function calcularFechaDelDia(diaDestino) {
         const copiaHoy = new Date();
-        const diaActual = copiaHoy.getDay(); // El día de hoy (ej. Jueves = 4)
+        const diaActual = copiaHoy.getDay();
         
-        // Calculamos la diferencia de días entre la columna destino (1 al 5) y hoy
         const diferencia = diaDestino - diaActual;
         
         copiaHoy.setDate(copiaHoy.getDate() + diferencia);
@@ -38,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `${yyyy}-${mm}-${dd}`;
     }
 
-    // Traduce el texto de la BD a los IDs de tus columnas (1 al 5)
     const mapearDias = (cadenaDias) => {
         const dias = [];
         if (cadenaDias.includes('Lunes')) dias.push(1);
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return dias;
     };
 
-    // 3. Petición Real al Servidor PHP -> MySQL de Docker
+    // === 4. CARGAR HORARIO DESDE LA BD ===
     try {
         const respuesta = await fetch(`./php/get_listas.php?usuario_id=${usuario.id}`);
         if (!respuesta.ok) throw new Error("No se pudo conectar con el backend.");
@@ -59,7 +57,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (resultado.ok) {
             const listasBD = resultado.listas;
 
-            // 4. Inyectar las tarjetas reales en sus respectivos días
             listasBD.forEach(clase => {
                 const diasNumeros = mapearDias(clase.dias_clase);
                 
@@ -67,10 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const columnaDia = document.querySelector(`#col-${diaNum} .classes-container`);
                     
                     if (columnaDia) {
-                        // Calculamos la fecha exacta para este día específico de la columna
                         const fechaClase = calcularFechaDelDia(diaNum);
 
-                        // Agregamos data-fecha al botón dinámicamente
                         const tarjetaHTML = `
                             <div class="class-card" style="--color-materia: ${clase.color};">
                                 <div class="class-card-icon-bg">
@@ -103,20 +98,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert("Ocurrió un error al conectar con la base de datos.");
     }
 
-    // === NUEVO: Evento Click para redireccionar al Pase de Lista ===
-    // Al usar delegación de eventos, no importa cuántas tarjetas se creen, todas responderán al clic
+    // === 5. EVENTOS DE INTERFAZ ===
     document.addEventListener('click', (e) => {
         const btnLista = e.target.closest('.btn-pass');
         if (btnLista) {
             const id = btnLista.getAttribute('data-id');
             const fecha = btnLista.getAttribute('data-fecha');
             
-            // Te manda con el ID de la clase y la fecha correspondiente a esa columna
             window.location.href = `./pasar_lista.html?id=${id}&fecha=${fecha}`;
         }
     });
 
-    // 5. Cerrar Sesión
     document.getElementById('btnCerrarSesion').addEventListener('click', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('usuarioSesion');

@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    // === 1. CAPTURAR FORMULARIO ===
     const loginForm = document.getElementById('loginForm');
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault(); 
 
+        // === 2. VALIDACIÓN DE CAMPOS ===
         const usernameValue = document.getElementById('username').value.trim();
         const passwordValue = document.getElementById('password').value.trim();
 
@@ -13,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // === 3. AUTENTICACIÓN CON EL SERVIDOR ===
         try {
-            // Hacemos la petición POST directamente al archivo PHP intermediario
             const respuesta = await fetch('./php/login.php', {
                 method: 'POST',
                 headers: {
@@ -30,11 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error("No se pudo obtener respuesta del servidor backend.");
             }
 
-            // Parseamos la respuesta JSON que generó el archivo PHP
             const resultado = await respuesta.json();
 
+            // === 4. GESTIÓN DE SESIÓN Y REDIRECCIÓN ===
             if (resultado.ok) {
-                // Creamos el objeto de sesión con los datos reales que vinieron de MySQL
                 const usuarioSesion = {
                     id: resultado.id,
                     usuario: usernameValue,
@@ -42,13 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     rol: resultado.rol
                 };
                 
-                // Guardamos en la memoria del navegador para el Dashboard
                 sessionStorage.setItem('usuarioSesion', JSON.stringify(usuarioSesion));
-
-                // Redirección directa al panel de control
                 window.location.href = "./dashboard.html";
             } else {
-                // Si el PHP determinó que los datos están mal, mostramos su mensaje exacto
                 alert(resultado.mensaje);
             }
 

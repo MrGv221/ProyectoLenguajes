@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// === 1. RECIBIR PARÁMETROS ===
 $lista_id = isset($_GET['lista_id']) ? intval($_GET['lista_id']) : 0;
 
 if ($lista_id === 0) {
@@ -8,6 +9,7 @@ if ($lista_id === 0) {
     exit;
 }
 
+// === 2. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -22,7 +24,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // 1. Calcular el 100% (Total de días evaluables, ignorando los inhábiles)
+    // === 3. CALCULAR DÍAS EVALUABLES ===
     $sqlDias = "SELECT COUNT(DISTINCT fecha) as dias_totales 
                 FROM registros_asistencia 
                 WHERE lista_id = :lista_id AND estado_asistencia != 'inhabil'";
@@ -30,7 +32,7 @@ try {
     $stmtDias->execute(['lista_id' => $lista_id]);
     $total_dias = (int) $stmtDias->fetchColumn();
 
-    // 2. Obtener a los alumnos y sus conteos
+    // === 4. OBTENER CONTEO DE ALUMNOS ===
     $sqlAlumnos = "
         SELECT 
             a.id as alumno_id, 

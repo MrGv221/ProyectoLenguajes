@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// === 1. CONFIGURACIÓN DE BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -15,16 +16,16 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // ¿Qué nos está pidiendo JavaScript? (GET = Leer, POST = Insertar)
+    // === 2. DETECCIÓN DEL MÉTODO HTTP ===
     $metodo = $_SERVER['REQUEST_METHOD'];
 
     if ($metodo === 'GET') {
-        // LEER ALUMNOS (Ahora con búsqueda de asistencia por fecha)
+        
+        // === 3. LEER ALUMNOS ===
         $lista_id = isset($_GET['lista_id']) ? intval($_GET['lista_id']) : 0;
         $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : null;
 
         if ($fecha) {
-            // MAGIA SQL: Trae al alumno y, si ya tiene registro este día, junta su estado_asistencia
             $sql = "SELECT a.id, a.nombre_completo, a.matricula, r.estado_asistencia 
                     FROM alumnos a 
                     LEFT JOIN registros_asistencia r ON a.id = r.alumno_id AND r.fecha = :fecha AND r.lista_id = :lista_id
@@ -33,7 +34,6 @@ try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['lista_id' => $lista_id, 'fecha' => $fecha]);
         } else {
-            // Fallback por si en alguna vista no mandan fecha
             $sql = "SELECT id, nombre_completo, matricula, NULL as estado_asistencia 
                     FROM alumnos WHERE lista_id = :lista_id ORDER BY nombre_completo ASC";
             $stmt = $pdo->prepare($sql);
@@ -44,7 +44,8 @@ try {
         echo json_encode(["ok" => true, "alumnos" => $alumnos]);
 
     } elseif ($metodo === 'POST') {
-        // INSCRIBIR NUEVO ALUMNO
+        
+        // === 4. INSCRIBIR NUEVO ALUMNO ===
         $input = file_get_contents("php://input");
         $data = json_decode($input, true);
 
@@ -62,8 +63,10 @@ try {
         ]);
 
         echo json_encode(["ok" => true, "mensaje" => "Alumno registrado exitosamente."]);
+
     } elseif ($metodo === 'DELETE') {
-        // DAR DE BAJA ALUMNO
+        
+        // === 5. DAR DE BAJA ALUMNO ===
         $input = file_get_contents("php://input");
         $data = json_decode($input, true);
 

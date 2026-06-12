@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
-// Capturar el ID de la lista que queremos editar
+// === 1. RECIBIR PARÁMETROS ===
 $lista_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($lista_id === 0) {
@@ -9,7 +9,7 @@ if ($lista_id === 0) {
     exit;
 }
 
-// Parámetros de conexión a Docker (Mismos que usaste en login)
+// === 2. CONEXIÓN A LA BASE DE DATOS ===
 $host = '127.0.0.1';
 $db   = 'asist_manager';
 $user = 'root';
@@ -24,7 +24,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 
-    // Consulta SQL para traer el detalle de la materia (sin formatear horas)
+    // === 3. OBTENER DETALLES DE LA MATERIA ===
     $stmt = $pdo->prepare("SELECT * FROM listas WHERE id = :id");
     $stmt->execute(['id' => $lista_id]);
     $lista = $stmt->fetch();
