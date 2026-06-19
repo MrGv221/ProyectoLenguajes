@@ -25,7 +25,8 @@ try {
             id, 
             nombre, 
             aula, 
-            DATE_FORMAT(hora_inicio, '%h:%i %p') AS inicio, 
+            DATE_FORMAT(hora_inicio, '%h:%i %p') AS inicio,
+            DATE_FORMAT(hora_fin, '%h:%i %p') AS fin,
             dias_clase, 
             icono, 
             color 

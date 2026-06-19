@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="es-MX">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AsistManager - Iniciar Sesión</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+    <script src="https://kit.fontawesome.com/448d4bfb94.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
 
     <header id="main-header">
@@ -33,23 +35,23 @@
         <div class="login-card">
             <h2>Identifícate</h2>
             <p class="subtitle">Accede al gestor de asistencia semiautomático</p>
-            
+
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username"><i class="fa-solid fa-envelope"></i> Correo o Usuario</label>
                     <input type="text" id="username" class="form-input" placeholder="ejemplo@correo.com" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password"><i class="fa-solid fa-lock"></i> Contraseña</label>
                     <input type="password" id="password" class="form-input" placeholder="••••••••" required>
                 </div>
-                
+
                 <button type="submit" class="btn btn-login-submit">
                     Ingresar <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 </button>
             </form>
-            
+
             <div class="login-footer-links">
                 <a href="#">¿Olvidaste tu contraseña?</a>
                 <a href="./index.html">Regresar a la página principal</a>
@@ -63,4 +65,5 @@
 
     <script src="./js/login.js"></script>
 </body>
+
 </html>

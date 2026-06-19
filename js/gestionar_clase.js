@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     // === 1. VALIDAR SESIÓN ===
     const sesionGuardada = sessionStorage.getItem('usuarioSesion');
     if (!sesionGuardada) {
@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const usuario = JSON.parse(sesionGuardada);
 
     // === 2. CONFIGURACIÓN VISUAL (PICKERS) ===
-    const colores = ['#9DB4C0', '#E07A5F', '#3D405B', '#81B29A', '#F2CC8F', '#A8DADC'];
-    const iconos = ['fa-code', 'fa-book', 'fa-laptop-code', 'fa-network-wired', 'fa-kanban', 'fa-flask'];
-    
+    const colores = ['#9DB4C0', '#E07A5F', '#3D405B', '#81B29A', '#F2CC8F', '#A8DADC', '#E491C9'];
+    const iconos = ['fa-code', 'fa-book', 'fa-laptop-code', 'fa-calculator', 'fa-chess', 'fa-flask', 'fa-brain'];
+
     let colorSeleccionado = '';
     let iconoSeleccionado = '';
     let diasSeleccionados = [];
@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // === 3. SELECTOR DE DÍAS ===
     document.getElementById('selectorDias').addEventListener('click', (e) => {
         const pill = e.target.closest('.pill');
-        if(pill) {
+        if (pill) {
             const dia = pill.getAttribute('data-dia');
             pill.classList.toggle('active');
-            if(diasSeleccionados.includes(dia)) {
+            if (diasSeleccionados.includes(dia)) {
                 diasSeleccionados = diasSeleccionados.filter(d => d !== dia);
             } else {
                 diasSeleccionados.push(dia);
@@ -66,16 +66,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // === 4. BAJA DE ALUMNOS ===
     document.querySelector('#tablaAlumnos tbody')?.addEventListener('click', async (e) => {
         const btnBaja = e.target.closest('.btn-baja-alumno');
-        
+
         if (btnBaja) {
-            e.preventDefault(); 
-            
+            e.preventDefault();
+
             const alumnoId = btnBaja.getAttribute('data-id');
             const matAlumno = btnBaja.closest('tr')?.querySelectorAll('td')[1]?.textContent || '';
-            const idClase = sessionStorage.getItem('claseAEditar') || new URLSearchParams(window.location.search).get('id'); 
-            
+            const idClase = sessionStorage.getItem('claseAEditar') || new URLSearchParams(window.location.search).get('id');
+
             const confirmar = confirm(`¿Estás seguro de dar de baja a la matrícula ${matAlumno.trim()}?`);
-            
+
             if (confirmar) {
                 btnBaja.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
                 btnBaja.disabled = true;
@@ -84,16 +84,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const respuesta = await fetch('./php/api_alumnos.php', {
                         method: 'DELETE',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: alumnoId, lista_id: idClase }) 
+                        body: JSON.stringify({ id: alumnoId, lista_id: idClase })
                     });
-                    
+
                     const resultado = await respuesta.json();
-                    
+
                     if (resultado.ok) {
-                        cargarAlumnos(idClase); 
+                        cargarAlumnos(idClase);
                     } else {
                         alert("Error: " + resultado.mensaje);
-                        cargarAlumnos(idClase); 
+                        cargarAlumnos(idClase);
                     }
                 } catch (error) {
                     console.error("Error al dar de baja:", error);
@@ -106,14 +106,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // === 5. MODO EDICIÓN (AUTO-LLENADO) ===
     const idAEditar = sessionStorage.getItem('claseAEditar');
-    
+
     if (idAEditar) {
         document.getElementById('txtEstadoPagina').innerText = "EDITAR MATERIA";
-        
+
         try {
             const respuesta = await fetch(`./php/get_lista_detalle.php?id=${idAEditar}`);
             if (!respuesta.ok) throw new Error("Error en la red.");
-            
+
             const resultado = await respuesta.json();
 
             if (resultado.ok) {
@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (iconBox) cambiarIcono(materia.icono, iconBox);
                 }
 
-                document.getElementById('candadoAlumnos').style.display = "none";                
-                cargarAlumnos(idAEditar);                
+                document.getElementById('candadoAlumnos').style.display = "none";
+                cargarAlumnos(idAEditar);
 
             } else {
                 alert(resultado.mensaje);
@@ -164,11 +164,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } else {
         document.getElementById('candadoAlumnos').style.display = "flex";
-        
+
         const defaultColor = document.querySelector('.color-dot');
         const defaultIcon = document.querySelector('.icon-box');
-        if(defaultColor) cambiarColor(colores[0], defaultColor);
-        if(defaultIcon) cambiarIcono(iconos[0], defaultIcon);
+        if (defaultColor) cambiarColor(colores[0], defaultColor);
+        if (defaultIcon) cambiarIcono(iconos[0], defaultIcon);
     }
 
     // === 6. GUARDAR MATERIA ===
@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const data = {
-            id: idAEditar || null,         
-            usuario_id: usuario.id,        
+            id: idAEditar || null,
+            usuario_id: usuario.id,
             nombre: nombre,
             clave: clave,
             aula: aula,
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (resultado.ok) {
                 alert("" + resultado.mensaje);
-                
+
                 if (!idAEditar) {
                     sessionStorage.setItem('claseAEditar', resultado.nuevo_id);
                     window.location.reload();
@@ -230,13 +230,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function cargarAlumnos(idClase) {
         const tbodyAlumnos = document.querySelector('#tablaAlumnos tbody');
         if (!tbodyAlumnos) return;
-        
+
         tbodyAlumnos.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--texto-mutado); padding: 2rem;">Actualizando lista... <i class="fa-solid fa-spinner fa-spin"></i></td></tr>`;
-        
+
         try {
             const respuesta = await fetch(`./php/api_alumnos.php?lista_id=${idClase}&_t=${Date.now()}`);
             const resultado = await respuesta.json();
-            
+
             if (resultado.ok) {
                 if (resultado.alumnos.length === 0) {
                     tbodyAlumnos.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--texto-mutado); padding: 2rem;">No hay alumnos.</td></tr>`;
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tbodyAlumnos.innerHTML = resultado.alumnos.map(a => `
                     <tr>
                         <td style="font-weight: 600;">${a.nombre_completo}</td>
-                        <td style="font-family: monospace; color: var(--texto-mutado);">${a.matricula}</td>
+                        <td style="font-family: monospace; color: var(--texto-mutado); text-align: center;">${a.matricula}</td>
                         <td style="text-align: right;">
                             <button type="button" class="btn-archive btn-baja-alumno" data-id="${a.id}" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" title="Dar de baja">
                                 <i class="fa-solid fa-user-minus"></i>
@@ -257,8 +257,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 tbodyAlumnos.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#e07a5f;">Error al cargar alumnos</td></tr>`;
             }
-        } catch (error) { 
-            console.error("Error alumnos:", error); 
+        } catch (error) {
+            console.error("Error alumnos:", error);
             tbodyAlumnos.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#e07a5f;">Error de conexión con Docker</td></tr>`;
         }
     }
@@ -289,8 +289,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (resultado.ok) {
                 inNombre.value = '';
                 inMatricula.value = '';
-                inNombre.focus(); 
-                
+                inNombre.focus();
+
                 cargarAlumnos(idAEditar);
             } else {
                 alert("Error: " + resultado.mensaje);
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     window.addEventListener('beforeunload', () => {
-        if(sessionStorage.getItem('claseAEditar')) {
+        if (sessionStorage.getItem('claseAEditar')) {
             sessionStorage.removeItem('claseAEditar');
         }
     });

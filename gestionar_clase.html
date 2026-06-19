@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es-MX">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/448d4bfb94.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="manage-page" style="--color-materia: #9DB4C0;"> <header id="main-header">
+
+<body class="manage-page" style="--color-materia: #9DB4C0;">
+    <header id="main-header">
         <nav class="navbar">
             <a href="./mis_clases.html" class="logo"><i class="fa-solid fa-arrow-left"></i> Volver</a>
             <span id="txtEstadoPagina" style="font-weight: 800; color: var(--texto-oscuro);">NUEVA CLASE</span>
-            <button id="btnGuardarTodo" class="btn btn-save-all"><i class="fa-solid fa-floppy-disk"></i> Guardar Todo</button>
+            <button id="btnGuardarTodo" class="btn btn-save-all"><i class="fa-solid fa-floppy-disk"></i> Guardar
+                Todo</button>
         </nav>
     </header>
 
@@ -61,9 +65,9 @@
                 <label>Identidad Visual (Color e Ícono)</label>
                 <div class="visual-pickers">
                     <div class="color-picker" id="pickerColores">
-                        </div>
+                    </div>
                     <div class="icon-picker" id="pickerIconos">
-                        </div>
+                    </div>
                 </div>
             </form>
         </section>
@@ -73,9 +77,9 @@
                 <i class="fa-solid fa-lock"></i>
                 <p>Guarda la materia para gestionar alumnos</p>
             </div>
-            
+
             <h2><i class="fa-solid fa-users"></i> Matrícula de Alumnos</h2>
-            
+
             <div class="add-student-box">
                 <input type="text" id="inNombreAlumno" placeholder="Nombre completo">
                 <input type="text" id="inMatricula" placeholder="Matrícula">
@@ -83,16 +87,16 @@
             </div>
 
             <div class="table-container">
-                <table id="tablaAlumnos">
+                <table id="tablaAlumnos" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Matrícula</th>
-                            <th></th>
+                            <th style="text-align: left; padding-bottom: 10px;">Nombre</th>
+                            <th style="text-align: center; padding-bottom: 10px; width: 30%;">Matrícula</th>
+                            <th style="text-align: right; padding-bottom: 10px; width: 10%;"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </section>
@@ -100,4 +104,5 @@
 
     <script src="./js/gestionar_clase.js"></script>
 </body>
+
 </html>

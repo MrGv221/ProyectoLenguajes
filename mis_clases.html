@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es-MX">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/448d4bfb94.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
 
     <header id="main-header">
@@ -19,7 +21,8 @@
             </a>
             <ul class="nav-links">
                 <li>
-                    <a href="./dashboard.html" class="btn btn-gestion" style="color: var(--texto-oscuro); text-decoration: none; font-weight: 700; margin-right: 1.5rem;">
+                    <a href="./dashboard.html" class="btn btn-gestion"
+                        style="color: var(--texto-oscuro); text-decoration: none; font-weight: 700; margin-right: 1.5rem;">
                         <i class="fa-solid fa-table-columns"></i> Horario
                     </a>
                 </li>
@@ -38,15 +41,17 @@
                 <h1>Gestión de Clases</h1>
                 <p>Administra la configuración y los alumnos de tus materias.</p>
             </div>
-            <a href="./gestionar_clase.html" class="btn btn-add-list" onclick="sessionStorage.removeItem('claseAEditar');">
+            <a href="./gestionar_clase.html" class="btn btn-add-list"
+                onclick="sessionStorage.removeItem('claseAEditar');">
                 <i class="fa-solid fa-plus"></i> Nueva Clase
             </a>
         </section>
 
         <section class="admin-grid" id="gridMisClases">
-            </section>
+        </section>
     </main>
 
     <script src="./js/mis_clases.js"></script>
 </body>
+
 </html>
